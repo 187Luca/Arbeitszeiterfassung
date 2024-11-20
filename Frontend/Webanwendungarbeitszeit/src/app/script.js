@@ -2,7 +2,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     event.preventDefault(); // Verhindert das Standardverhalten des Formulars
 
     // Hier könntest du eine Validierung oder Authentifizierung durchführen
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     it('Get html', function(done) {
@@ -18,6 +18,6 @@ document.getElementById('login-form').addEventListener('submit', function(event)
         document.getElementById('login-container').classList.add('hidden');
         document.getElementById('content').classList.remove('hidden');
     } else {
-        alert('Bitte Email und Passwort eingeben.');
+        alert('Bitte Username und Passwort eingeben.');
     }
 });

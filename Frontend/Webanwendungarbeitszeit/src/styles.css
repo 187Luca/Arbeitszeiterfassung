@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('./app/login.png') no-repeat center center/cover;
+    color: #333;
+}
+
+.hidden {
+    display: none;
+}
