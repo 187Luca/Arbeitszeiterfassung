@@ -1,4 +1,3 @@
-
 .container {
     margin: auto;
     width: 80%;
@@ -6,18 +5,27 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box; /* Verhindert, dass Padding/Borders die Breite beeinflussen */
+    overflow: hidden; /* Schneidet Überlappungen ab */
 }
+
 .form-section {
     display: flex;
     justify-content: space-between;
+    gap: 2%; /* Verhindert Überlappungen zwischen den Boxen */
     margin-bottom: 20px;
+    flex-wrap: wrap; /* Ermöglicht Umschlagen der Boxen bei kleinen Bildschirmgrößen */
 }
+
 .form-box {
-    width: 48%;
+    width: 48%; /* Sicherstellen, dass die Boxen nebeneinander passen */
+    box-sizing: border-box; /* Padding/Borders in Breite einrechnen */
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
+    overflow: hidden; /* Inhalt innerhalb der Box halten */
 }
+
 .form-box input,
 .form-box select {
     width: 100%;
@@ -25,7 +33,9 @@
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-sizing: border-box;
 }
+
 .form-box button {
     width: 100%;
     padding: 10px;
@@ -34,10 +44,13 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    box-sizing: border-box;
 }
+
 .form-box button:hover {
     background: #0056b3;
 }
+
 button.display-btn {
     width: 100%;
     padding: 10px;
@@ -47,7 +60,9 @@ button.display-btn {
     border-radius: 5px;
     margin-top: 20px;
     cursor: pointer;
+    box-sizing: border-box;
 }
+
 button.display-btn:hover {
     background: #0056b3;
 }
