@@ -4,7 +4,10 @@ const sqlite3 = require('sqlite3').verbose();
 
 
 //Login Datenbankabgleich
-function buttonDB(inputUsername, inputPassword){
+function buttonDB(){
+//Werte aus Felder abrufen und in Variablen speichern (Inputs haben die IDs "username" und "password")
+const inputUsername = document.getElementById('username').value;
+const inputPassword = document.getElementById('password').value;
 //Verbindung zu DB 
 const db = new sqlite3.Database('Datenbank.db', (err) => {
     if (err) {
@@ -49,7 +52,13 @@ db.close((err) => {
 
 
 //Arbeitszeit + Fehlzeiten erfassen
-function arbeitszeitInDB(user_id, type, start_date, start_time, end_time, description) {
+function arbeitszeitInDB() {
+    const user_id = document.getElementById('user_id').value;
+    const type = document.getElementById('type').value;
+    const start_date = document.getElementById('start_date').value;
+    const start_time = document.getElementById('start_time').value;
+    const end_time = document.getElementById('end_time').value;
+    const description = document.getElementById('description').value; 
     // Verbindung zur DB
     const db = new sqlite3.Database('Datenbank.db', (err) => {
         if (err) {
@@ -90,7 +99,8 @@ function arbeitszeitInDB(user_id, type, start_date, start_time, end_time, descri
 
 
 //Daten aus DB für die Übersicht abrufen
-function datenAnzeigen(user_id) {
+function datenAnzeigen() {
+    const user_id = document.getElementById('user_id').value; 
     return new Promise((resolve, reject) => {
         // Verbindung zur DB
         const db = new sqlite3.Database('Datenbank.db', (err) => {
