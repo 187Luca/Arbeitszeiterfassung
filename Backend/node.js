@@ -3,11 +3,9 @@ const path = require('path');
 const express = require('express');
 
 
-
+//Login Datenbankabgleich
 function buttonDB(inputUsername, inputPassword){
-
-// Verbindung zur Datenbank herstellen (Datei: 'example.db')
-// Die Datenbank wird erstellt, falls sie noch nicht existiert
+//Verbindung zu DB 
 const db = new sqlite3.Database('Datenbank.db', (err) => {
     if (err) {
         console.error('Fehler beim Öffnen der Datenbank:', err.message);
@@ -17,23 +15,24 @@ const db = new sqlite3.Database('Datenbank.db', (err) => {
 });
 
     return new Promise((resolve, reject) => {
-        // SQL-Abfrage: Überprüfe, ob es einen Eintrag gibt, der beiden Kriterien entspricht
-        const query = `SELECT * FROM users WHERE username = ? AND password = ?`;
-        db.get(query, [username, password], (err, row) => {
+        // SQL-Abfrage: Überprüfe, ob es einen Eintrag gibt, der eingegebenen Username + Passwort entspricht 
+        const query = `SELECT * FROM Users WHERE username = ? AND password = ?`;
+        //Username + Passwort werden in die "?" eingetragen für den Vergleich / query ist eine Variable, die SQL-Abfrage enthält
+        db.get(query, [inputUsername, inputPassword], (err, row) => {
             if (err) {
+                // Falls ein Fehler auftritt (z.B. Syntaxfehler)
                 reject(err);
             } else if (row) {
-                // Ein passender Benutzer wurde gefunden
+                // Ein passender Benutzer (Username + Passwort) wurde gefunden / "row" ist nicht leer = Übereinstimmung gefunden
                 resolve(true);
             } else {
-                // Kein passender Benutzer gefunden
+                // Kein passender Benutzer (Username + Passwort) gefunden / "row" ist undifined = keine Übereinstimmung gefunden 
                 resolve(false);
             }
         });
     });
 }
-
-// Verbindung zur Datenbank schließen
+// Verbindung zur DB schließen (Außerhalb der Funktion, da Verbidnung sonst sofort nach Abfrage geschlossen werden würde, obwohl Abfrage noch läuft / Wichtig bei "db.get")
 db.close((err) => {
     if (err) {
         console.error('Fehler beim Schließen der Datenbank:', err.message);
@@ -46,31 +45,42 @@ db.close((err) => {
 
 
 
-/*
-    // Tabelle erstellen (falls nicht existiert)
-    db.run(`
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            age INTEGER NOT NULL
-        )
-    `, (err) => {
+
+
+
+//Arbeitszeit + Fehlzeiten erfassen
+function arbeitszeitInDB(user_id, type, start_date, start_time, end_time, description) {
+    // Verbindung zur DB
+    const db = new sqlite3.Database('Datenbank.db', (err) => {
         if (err) {
-            console.error('Fehler beim Erstellen der Tabelle:', err.message);
-        } else {
-            console.log('Tabelle erfolgreich erstellt oder bereits vorhanden.');
+            console.error('Fehler beim Öffnen der Datenbank:', err.message);
+            return;
         }
     });
 
-    // Beispiel-Daten einfügen
-    db.run(`INSERT INTO users (name, age) VALUES (?, ?)`, ['Alice', 30], (err) => {
+    // Daten in die Tabelle einfügen
+    const insertQuery = `
+        INSERT INTO Timeplan (user_id, type, start_date, start_time, end_time)
+        VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    db.run(insertQuery, [user_id, type, start_date, start_time, end_time, description], function (err) {
         if (err) {
             console.error('Fehler beim Einfügen der Daten:', err.message);
         } else {
             console.log('Daten erfolgreich eingefügt.');
         }
+
+        // Verbindung zur Datenbank schließen
+        db.close((err) => {
+            if (err) {
+                console.error('Fehler beim Schließen der Datenbank:', err.message);
+            } else {
+                console.log('Datenbankverbindung geschlossen.');
+            }
+        });
     });
-*/
+}
 
 
 
@@ -79,39 +89,39 @@ db.close((err) => {
 
 
 
+//Daten aus DB für die Übersicht abrufen
+function datenAnzeigen(user_id) {
+    return new Promise((resolve, reject) => {
+        // Verbindung zur DB
+        const db = new sqlite3.Database('Datenbank.db', (err) => {
+            if (err) {
+                console.error('Fehler beim Öffnen der Datenbank:', err.message);
+                reject(err);
+                return;
+            }
+        });
 
+        // SQL-Abfrage: Alle Zeilen mit der gegebenen user_id abrufen
+        const selectQuery = `SELECT * FROM Timeplan WHERE userid = ?`;
 
-// Pfad zur SQLite-Datenbank-Datei
-const dbPath = path.resolve(__dirname, '../datenbank.db');
+        db.all(selectQuery, [user_id], (err, rows) => {
+            if (err) {
+                console.error('Fehler beim Abrufen der Daten:', err.message);
+                db.close();
+                reject(err);
+            } else {
+                console.log('Daten erfolgreich abgerufen:', rows);
+                resolve(rows); // Gibt die entsprechenden Zeilen zurück, falls vorhanden
+            }
 
-// Verbindung zur SQLite-Datenbank herstellen
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Fehler beim Verbinden mit der SQLite-Datenbank:', err.message);
-    } else {
-        console.log('Verbindung zur SQLite-Datenbank hergestellt.');
-    }
-});
-
-// Beispiel: Abfrage ausführen
-db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)`);
-    db.run(`INSERT INTO users (name, email) VALUES (?, ?)`, ['Max Mustermann', 'max@example.com']);
-    db.all(`SELECT * FROM users`, [], (err, rows) => {
-        if (err) {
-            console.error('Fehler beim Abrufen der Daten:', err.message);
-        } else {
-            console.log('Abgerufene Daten:', rows);
-        }
+            // Verbindung zur Datenbank schließen
+            db.close((err) => {
+                if (err) {
+                    console.error('Fehler beim Schließen der Datenbank:', err.message);
+                } else {
+                    console.log('Datenbankverbindung geschlossen.');
+                }
+            });
+        });
     });
-});
-
-// Datenbankverbindung schließen
-// (optional, wenn der Zugriff beendet ist)
-db.close((err) => {
-    if (err) {
-        console.error('Fehler beim Schließen der Datenbank:', err.message);
-    } else {
-        console.log('SQLite-Datenbankverbindung geschlossen.');
-    }
-});
+}

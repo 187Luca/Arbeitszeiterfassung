@@ -1,11 +1,4 @@
-body {
-    font-family: Arial, sans-serif;
-    background-image: url('https://via.placeholder.com/1500x900.png?text=Background+Image');
-    background-size: cover;
-    background-repeat: no-repeat;
-    margin: 0;
-    padding: 0;
-}
+
 .container {
     margin: auto;
     width: 80%;
