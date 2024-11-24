@@ -11,7 +11,7 @@
             <label for="arbeitszeit-bis-zeit">Uhrzeit:</label>
             <input type="time" id="end_time">
             
-            <button>Speichern</button>
+            <button onclick="arbeitszeitInDB()">Speichern</button>
         </div>
 
         <!-- Fehlzeiteintragung -->
@@ -31,10 +31,10 @@
                 <option value="ferien">Ferien/Feiertag</option>
                 <option value="krankheit">Krankheit</option>
             </select>
-            <button>Speichern</button>
+            <button onclick="arbeitszeitInDB()">Speichern</button>
         </div>
     </div>
 
     <!-- Anzeigen-Button -->
-    <button class="display-btn">Anzeigen</button>
+    <button class="display-btn" onclick="datenAnzeigen()">Anzeigen</button>
 </div>
