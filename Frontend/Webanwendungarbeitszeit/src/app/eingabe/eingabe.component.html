@@ -1,1 +1,36 @@
-<p>eingabe works!</p>
+
+<body>
+    <div class="container">
+        <div class="form-section">
+            <!-- Arbeitszeiteintragung -->
+            <div class="form-box">
+                <h3>Arbeitszeiteintragung</h3>
+                <label for="arbeitszeit-von">Von:</label>
+                <input type="date" id="arbeitszeit-von">
+                <label for="arbeitszeit-bis">Bis:</label>
+                <input type="date" id="arbeitszeit-bis">
+                <button>Speichern</button>
+            </div>
+
+            <!-- Fehlzeiteintragung -->
+            <div class="form-box">
+                <h3>Fehlzeiteintragung</h3>
+                <label for="fehlzeit-von">Von:</label>
+                <input type="date" id="fehlzeit-von">
+                <label for="fehlzeit-bis">Bis:</label>
+                <input type="date" id="fehlzeit-bis">
+                <label for="fehlzeit-art">Art der Fehlzeit:</label>
+                <select id="fehlzeit-art">
+                    <option value="urlaub">Urlaub</option>
+                    <option value="ferien">Ferien/Feiertag</option>
+                    <option value="krankheit">Krankheit</option>
+                </select>
+                <button>Speichern</button>
+            </div>
+        </div>
+
+        <!-- Anzeigen-Button -->
+        <button class="display-btn">Anzeigen</button>
+    </div>
+</body>
+</html>
